@@ -1,0 +1,27 @@
+{% extends 'flatpages/exp.html' %}
+
+{% block title %}
+    {{ post.heading }}
+{% endblock title %}
+{% block content %}
+    <article>
+                <!-- Post header-->
+        <header class="mb-4">
+            <!-- Post title-->
+            <h1 class="fw-bolder mb-1">{{ post.heading }}</h1>
+            <!-- Post meta content-->
+            <div class="text-muted fst-italic mb-<p>2">
+            	<p>Posted on {{ post.data_time }}</p>
+            	<p>Author - {{ post.author }}</p>
+            </div>
+            <!-- Post categories-->
+            {% for category in post.category.all %}
+                <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{ category }}</a>
+            {% endfor %}
+        </header>
+        <!-- Post content-->
+        <section class="mb-5">
+            <p class="fs-5 mb-4">{{ post.text }}</p>
+        </section>
+    </article>
+{% endblock content %}

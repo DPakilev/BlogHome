@@ -1,0 +1,124 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Blog Home - Start Bootstrap Template</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{% static 'home/assets/favicon.ico' %" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'home/css/styles.css' %}" rel="stylesheet" />
+    </head>
+    <body>
+        <!-- Responsive navbar-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="/news">Home</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <li class="nav-item"><a class="nav-link" href="{% url 'post_create' %}">Создать товар</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'post_search' %}">Поиск статей и новостей</a></li>
+                {% if is_not_authors %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'upgrade' %}">Хочу быть Автором!</a></li>
+                {% else %}
+                {% endif %}
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+
+
+                        {% if user.is_authenticated %}
+                            <li class="nav-item"><a class="nav-link" href="">{{ user.first_name }} {{ user.last_name }}</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Выйти</a></li>
+                            {% block head %}
+                            {% endblock head %}
+
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'account_signup' %}">Зарегистрироваться</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Войти</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Page header with logo and tagline-->
+        <header class="py-5 bg-light border-bottom mb-4">
+<!--            <div class="container">-->
+<!--                <div class="text-center my-5">-->
+
+<!--                </div>-->
+<!--            </div>-->
+        </header>
+        <!-- Page content-->
+        <div  class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    {% block content %}
+                    {% endblock content %}
+                <!-- Blog entries-->
+
+
+                    <!-- Featured blog post-->
+
+                    <nav aria-label="Pagination">
+                        <hr class="my-0" />
+                        <ul class="pagination justify-content-center my-4">
+
+                            {% if is_paginated %}
+
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item"><a class="page-link" href="?page=1" tabindex="-1" aria-disabled="true">First</a></li>
+                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1" aria-disabled  ="true"><<<</a></li>
+                                {% endif %}
+    
+    
+                                {% for num in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == num %}
+                                        <li class="page-item active" aria-current="page"><a class="page-link">{{ num }}</a></li>
+                                    {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+                                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+    
+    
+                                {% if page_obj.has_next %}
+                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}" tabindex="-1" aria-disabled="true">>>></a></li>
+                                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+                                {% endif %}
+
+                            {% endif %}
+
+                        </ul>
+                    </nav>
+                </div>
+                <!-- Side widgets-->
+<!--                <div class="col-lg-4">-->
+<!--                    &lt;!&ndash; Categories widget&ndash;&gt;-->
+<!--                    <div class="card mb-4">-->
+<!--                        <div class="card-header">Категории</div>-->
+<!--                        <div class="card-body">-->
+<!--                            <div class="row">-->
+<!--                                <p class="col-sm-6">-->
+<!--                                    {% for category in all_category %}-->
+<!--                                        <p align="left"><a class="btn btn-primary" href="{% url 'category_post' category.id %}">{{ category }}</a></p>-->
+<!--                                    {% endfor %}-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+        </div>
+        <!-- Footer-->
+        <footer class="py-5 bg-dark">
+            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2021</p></div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="{% static 'https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js' %}"></script>
+        <!-- Core theme JS-->
+        <script src="{% static 'js/scripts.js' %}"></script>
+    </body>
+</html>

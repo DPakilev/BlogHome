@@ -1,0 +1,25 @@
+{% extends 'flatpages/default.html' %}
+
+
+{% block title %}
+    Категория - {{ category }}
+{% endblock title %}
+
+{% block content %}
+    {% if all_posts %}
+
+        {% for post in all_posts %}
+            <div class="small text-muted">{{ post.data_time }}</div>
+            <h2 class="card-title">{{ post.heading }}</h2>
+            <div class="small text-muted">Автор - {{ post.author.user.first_name }} {{ post.author.user.last_name }}</div>
+            <p class="card-text">{{ post.text }}</p>
+            <a class="btn btn-primary" href="{% url 'post' post.id %}">Read more →</a>
+            <br>
+
+        {% endfor %}
+
+    {% else %}
+        <h1>Новостей и статей нет</h1>
+
+    {% endif %}
+{% endblock content %}

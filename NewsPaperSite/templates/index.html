@@ -1,0 +1,9 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}Premium{% endblock title %}
+
+{% block content %}
+    {% if is_not_authors %}
+        <button> <a href="{% url 'upgrade' %}"> Хочу Premium!</a> </button>
+    {% endif %}
+{% endblock content %}

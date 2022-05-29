@@ -1,0 +1,28 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+    Удаление старинцы
+{% endblock title %}
+
+{% block content %}
+    <article>
+        <header class="mb-4">
+            <h1 class="fw-bolder mb-1">{{ post.heading }}</h1>
+            <div class="text-muted fst-italic mb-<p>2">
+            	<p>Posted on {{ post.data_time }}</p>
+            	<p>Author - {{ post.author }}</p>
+            </div>
+            {% for category in post.category.all %}
+                <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{ category }}</a>
+            {% endfor %}
+        </header>
+        <section class="mb-5">
+            <p class="fs-5 mb-4">{{ post.text }}</p>
+        </section>
+    </article>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Подтвердить">
+    </form>
+{% endblock content %}

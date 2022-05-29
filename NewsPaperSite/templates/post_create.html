@@ -1,0 +1,18 @@
+{% extends 'flatpages/active.html' %}
+
+{% block title %}
+    <title>Создание статьи</title>
+{% endblock title %}
+
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+
+        {{ form.article_or_news }}<br><br>
+        {{ form.category }}<br><br>
+        {{ form.heading }}<br><br>
+        {{ form.text }}<br>
+
+        <input type="submit" value="Добавить">
+    </form>
+{% endblock content %}
