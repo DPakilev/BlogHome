@@ -17,7 +17,7 @@
                         {% for category in post.category.all %}
                             <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{ category }}</a>
                         {% endfor %}
-                        <p class="fs-5 mb-4">{{ post.text }}</p>
+                        <p class="fs-5 mb-4">{{ post.text | truncatewords:40 }}</p>
                         <a class="btn btn-primary" href="{% url 'post' post.id %}">Читать далее →</a>
                         <a class="btn btn-primary" href="{% url 'post_delete' post.id %}" >Удалить</a>
                         <a class="btn btn-primary" href="{% url 'post_update' post.id %}">Редактировать</a>

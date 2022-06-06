@@ -95,7 +95,7 @@ class PostDetailView(DetailView, CreateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class PostSearchView( ListView):
+class PostSearchView(ListView):
 
     model = Post
     template_name = 'post_search.html'
@@ -118,3 +118,4 @@ class CategoryPostView(DetailView):
         context = super().get_context_data(**kwargs)
         context['all_posts'] = Post.objects.filter(category=self.object)
         return context
+
