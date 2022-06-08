@@ -1,39 +1,50 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 
 
 class Common(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="users/", default='default.jpg')
+    slug = models.SlugField(null=True,unique=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.user.username)
+        super(Common, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.user.username
+
 
 class Author(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField(default=0)
 
-    def update_rating(self):
+
+
+    def save(self, *args, **kwargs):
+
         sum_post_rating = 0
         sum_comment_rating = 0
         sum_post_comment_rating = 0
+        common = Common.objects.get(user=self.user)
 
         all_post = Post.objects.filter(author=self)
-        all_comment = Comment.objects.filter(author=self)
-
+        all_comment = Comment.objects.filter(common=common)
         for post in all_post:
-            sum_post_rating += post.raing
-
+            sum_post_rating += post.rating
         for comment in all_comment:
             sum_comment_rating += comment.rating
-
         for post in all_post:
             all_post_comment = Comment.objects.filter(post=post)
             for post_comment in all_post_comment:
                 sum_post_comment_rating += post_comment.rating
 
         self.rating = sum_post_comment_rating + sum_comment_rating + sum_post_rating * 3
+
+        super(Author, self).save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.user.username}'
@@ -56,18 +67,6 @@ class Post(models.Model):
     text = models.CharField(max_length=20000)
     rating = models.IntegerField(default=0)
 
-    def all_comment(self):
-        comments = Comment.objects.filter(post=self)
-        count = 1
-        for comment in comments:
-            print(f'Комментарий {count}\n')
-            print(f'{comment.author}')
-            print(f'{comment.text}')
-            print(f'{comment.data_time}')
-            print(f'{comment.rating}')
-            print('\n')
-            count += 1
-
     def get_absolute_url(self):
         return f'/news/{self.id}'
 
@@ -76,9 +75,6 @@ class Post(models.Model):
 
     def dislike(self):
         self.rating -= 1
-
-    def preview(self):
-        return self.text[:124]
 
     def __str__(self):
         return f'{self.heading}'
@@ -112,17 +108,3 @@ class Comment(models.Model):
 
     def get_absolute_url(self):
         return f'/news/{self.post.id}'
-
-
-def best_author():
-    best = Author.objects.all().order_by('-rating')
-    return f'{best.user.username} - {best.rating}'
-
-
-def best_post():
-    best = Post.objects.all().order_by('-rating')
-    print(f'{best.author.user.username}')
-    print(f'{best.heading}')
-    print(f'{best.preview()}')
-    print(f'{best.data_time}')
-    print(f'{best.rating}')

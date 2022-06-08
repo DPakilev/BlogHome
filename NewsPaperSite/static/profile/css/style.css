@@ -1,0 +1,437 @@
+* {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+*, *:before, *:after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+:focus, :active {
+  outline: none;
+}
+
+a:focus, a:active {
+  outline: none;
+}
+
+nav, footer, header, aside {
+  display: block;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  font-size: 100%;
+  line-height: 1;
+  font-size: 14px;
+  -ms-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+input, button, textarea {
+  font-family: inherit;
+}
+
+input::-ms-clear {
+  display: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+a, a, :visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-shadow: none;
+}
+
+ul, li {
+  list-style: none;
+}
+
+img {
+  vertical-align: top;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: inherit;
+  font-weight: 400;
+}
+
+/*----------nullstyle----------*/
+html,
+body {
+  font-family: -apple-system,BlinkMacSystemFont,Arial,sans-serif,system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-size: 1rem;
+  font-weight: 400;
+  background-color: #f0f0f0;
+}
+
+.bg-dark {
+  background-color: #212529;
+}
+
+p {
+  line-height: 1.5;
+}
+
+.wrapper {
+  min-height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.wrapper header {
+  border-bottom: 1px solid #dedede;
+  height: 100%;
+}
+
+.wrapper header .navbar {
+  height: 56px;
+}
+
+.wrapper header .navbar-brand {
+  color: #ffffff;
+  padding-top: 0.3125rem;
+  padding-bottom: 0.3125rem;
+  margin-right: 2rem;
+  font-size: 1.25rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.wrapper header .navbar-collapse {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: end;
+  margin-left: auto !important;
+}
+
+.wrapper header .navbar-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+}
+
+.wrapper .header-content {
+  height: 4rem;
+  background-color: #fff;
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  border-bottom: 1px solid #dedede;
+}
+
+.wrapper main {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+  color: #333;
+  padding: 0 0 60px;
+}
+
+.wrapper main .container {
+  margin: 12px auto 60px;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: start;
+}
+
+.wrapper main .container .page__wrapper {
+  width: 100%;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: start;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.wrapper main .container .page__wrapper .page__profile {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 66.666%;
+          flex: 1 1 66.666%;
+  margin: 0 16px 0 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block {
+  margin: 0 0 15px 0;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user-card {
+  padding: 16px 20px;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user-card__info-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user-card__info-container .user-card__image {
+  background-image: url("../img/avatar-female-03.jpg");
+  background-size: contain;
+  width: 120px;
+  height: 120px;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user-card__info-container .user-card__info {
+  font-size: 1.5rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin: 0 0 0 10px;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user-card__info-container .user-card__info .name {
+  margin: 30px 0 0 0;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user-card__info-container .user-card__info .surname {
+  margin: 0 0 22px 0;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user-card__info-container .user-card__data {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-left: auto;
+  padding: 0;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user-card__info-container .user-card__data .username {
+  margin: 0 0 15px 0;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user-card__info-container .user-card__data .rate {
+  font-weight: 500;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user__tabs {
+  padding: 0 20px 5px;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user__tabs .tabs {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user__tabs .tabs__tab-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 44px;
+  margin: 0 24px 0 0;
+  position: relative;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user__tabs .tabs__tab-item .tabs__tab-link {
+  margin: 2px 0;
+  color: #505c66;
+  -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  -o-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  line-height: 1.5rem;
+  font-weight: 500;
+  letter-spacing: .01rem;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+}
+
+.wrapper main .container .page__wrapper .page__profile .user__block .user__tabs .tabs__tab-item .tabs__tab-link:hover {
+  color: #8aa2ce;
+}
+
+.wrapper main .container .page__wrapper .page__profile .profile__body {
+  padding: 20px;
+}
+
+.wrapper main .container .page__wrapper .page__profile .profile__body .profile-placeholder {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.wrapper main .container .page__wrapper .page__profile .profile__body .profile-placeholder__image {
+  background-image: url("../img/nothing.png");
+  width: 150px;
+  height: 150px;
+  background-size: contain;
+  margin: 20px 20px 0;
+}
+
+.wrapper main .container .page__wrapper .page__profile .profile__body .profile-placeholder__text {
+  color: #505c66;
+  line-height: 1.5rem;
+  font-weight: 300;
+  font-size: 0.875rem;
+  margin: 20px 20px;
+}
+
+.wrapper main .container .page__wrapper .page__sidebar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 33.333%;
+          flex: 1 1 33.333%;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 50;
+  top: 76px;
+  left: 0;
+  border-bottom: 1px solid #dedede;
+}
+
+.wrapper main .container .page__wrapper .page__sidebar .sidebar__block .block__header {
+  margin: 0 20px 0;
+  padding: 16px 0 12px;
+  border-bottom: 1px solid #d5dddf;
+}
+
+.wrapper main .container .page__wrapper .page__sidebar .sidebar__block .block__header .block__header-container .block__title {
+  font-size: .8125rem;
+  letter-spacing: .0625rem;
+  line-height: 1.25rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: #505c66;
+}
+
+.wrapper main .container .page__wrapper .page__sidebar .sidebar__block .block__body {
+  padding: 24px 20px;
+  font-size: .875rem;
+  line-height: 1.5;
+  color: #333;
+}
+
+.wrapper footer {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.wrapper footer .container {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.wrapper footer .container .footer-info {
+  color: #ffffff;
+  display: block;
+}
+
+.container {
+  max-width: 1096px;
+  width: 100%;
+  margin: 0 auto;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%;
+  -ms-flex-wrap: inherit;
+      flex-wrap: inherit;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.container .nav-link {
+  display: block;
+  margin: 0.5rem 0;
+  color: #ffffff;
+  -webkit-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  -o-transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  line-height: 1.5rem;
+}
+
+.container .nav-link:hover {
+  color: #8aa2ce;
+}
+
+.container .nav-item {
+  padding: 0.5rem, 1rem;
+  margin: 0 2rem 0 0;
+}
+
+.container .for-authors {
+  margin: 0 0 0 8rem;
+}
+
+.block {
+  background-color: #fff;
+  width: 100%;
+}

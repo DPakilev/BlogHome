@@ -1,0 +1,70 @@
+{% extends 'flatpages/profile.html' %}
+
+{% block title %}
+   <title>{{ common.user.username }} - BlogHome</title>
+{% endblock title %}
+
+{% block tabs %}
+   <div class="tabs">
+      <div class="tabs__tab-item">
+         <a style="color: #8aa2ce" href="{% url 'profile' common.user.username %}" class="tabs__tab-link tabs__tab-link1">Ваши публикации</a>
+      </div>
+      <div class="tabs__tab-item">
+         <a href="" class="tabs__tab-link tabs__tab-link2">Понравившиеся</a>
+      </div>
+      <div class="tabs__tab-item">
+         <a href="{% url 'profile_comment_post' common.user.username %}" class="tabs__tab-link tabs__tab-link3">Комментарии</a>
+      </div>
+   </div>
+{% endblock tabs %}
+
+{% block content %}
+   {% if no_post %}
+
+      <div class="profile-placeholder__image"></div>
+      <div class="profile-placeholder__text">
+         <p>К сожалению, Вы не сделали ещё ни одной публикации</p>
+         {% if is_author %}
+         <a style="color: #8aa2ce" href="{% url 'post_create' %}">Написать статью</a>
+         {% endif %}
+      </div>
+
+   {% else %}
+
+      {% for post in author_posts %}
+      <div class="card mb-4">
+         <div class="card-body">
+            <div class="text-muted fst-italic mb-2">Posted on {{ post.data_time }}</div>
+            <h1 class="fw-bolder mb-1">{{ post.heading }}</h1>
+            {% for category in post.category.all %}
+            <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{ category }}</a>
+            {% endfor %}
+            <p class="fs-5 mb-4">{{ post.text | truncatewords:100 }}</p>
+            <a class="btn btn-primary" href="{% url 'post' post.id %}">Читать далее →</a>
+            <a class="btn btn-primary" href="{% url 'post_delete' post.id %}" >Удалить</a>
+            <a class="btn btn-primary" href="{% url 'post_update' post.id %}">Редактировать</a>
+            <br><br>
+         </div>
+      </div>
+      {% endfor %}
+
+   {% endif %}
+
+<style type="text/css">
+   .tabs__tab-link1::before {
+      content: "";
+      text-align: center;
+      background-color: #8aa2ce;
+      height: 2px;
+      left: 0;
+      right: 0;
+      top: 47px;
+      width: 100%;
+      position: absolute;
+      margin: 0 auto;
+   }
+</style>
+
+{% endblock content %}
+
+

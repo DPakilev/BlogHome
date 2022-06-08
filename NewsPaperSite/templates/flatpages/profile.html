@@ -1,0 +1,137 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+   <meta name="description" content="" />
+   <meta name="author" content="" />
+   {% block title %}{% endblock title %}
+   <!-- Favicon-->
+   <link type="image/x-icon" href="{% static 'profile/img/favicon/favicon1.png' %}" rel="shortcut icon">
+   <link type="Image/x-icon" href="{% static 'profile/img/favicon/favicon1.png' %}" rel="icon">
+   <!-- Core theme CSS (includes Bootstrap)-->
+   <link href="{% static 'profile/css/style.css' %}" rel="stylesheet" />
+<!--   <link href="{% static 'home/css/styles.css' %}" rel="stylesheet" />-->
+</head>
+
+<body>
+   <div class="wrapper">
+      <header class="py-5 bg-light border-bottom mb-4">
+         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+               <a class="navbar-brand nav-link" href="/news">BlogHome</a>
+               <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                  aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+               <!-- <li class="nav-item"><a class="nav-link" href="{% url 'post_create' %}">Создать товар</a></li> -->
+               <!-- <li class="nav-item"><a class="nav-link" href="{% url 'post_search' %}">Поиск статей и новостей</a></li> -->
+               {% if is_not_authors %}
+                  <li class="nav-item for-authors"><a class="nav-link" href="{% url 'upgrade' %}">Хочу быть Автором!</a></li>
+               {% else %}
+                  <li class="nav-item for-authors"><a class="nav-link" href="{% url 'post_create' %}">Написать статью</a></li>
+               {% endif %}
+
+               <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                     <!-- <li class="nav-item"><a class="nav-link" href="">{{ user.username }}</a></li> -->
+                     <li class="nav-logout"><a class="nav-link" href="{% url 'account_logout' %}">Выйти</a></li>
+                     <!-- <li class="nav-item"><a class="nav-link" href="{% url 'account_signup' %}">Зарегистрироваться</a> </li>    -->
+                     <!--  <li class="nav-item"><a class="nav-link" href="{% url 'account_login' %}">Войти</a></li>     -->
+                  </ul>
+               </div>
+            </div>
+         </nav>
+      </header>
+      <div class="header-content">
+         <div class="container">
+            <!-- <link type="image/x-icon" href="{% static '..//../static/home/assets/favicon.ico' %}" rel="icon" />
+            <link type="image/x-icon" href="{% static '..//../static/home/assets/favicon.ico' %}" rel="shortcut icon">
+
+            <link type="image/x-icon" href="..//../static/home/assets/favicon.ico" rel="shortcut icon">
+            <link type="Image/x-icon" href="..//../static/home/assets/favicon.ico" rel="icon"> -->
+         </div>
+      </div>
+      <main class="page">
+         <div class="container">
+            <div class="page__wrapper">
+               <div class="page__profile">
+                  <section class="user__block block">
+                     <div class="user-card">
+                        <div class="user-card__info-container">
+                              <img class="user-card__image" src="{{ common.image.url }}">
+                           <div class="user-card__info">
+                              <div class="name">
+                                 {{ common.user.first_name }}
+                              </div>
+                              <div class="surname">
+                                 {{ common.user.last_name }}
+                              </div>
+                           </div>
+                           <div class="user-card__data">
+                              {% if is_author %}
+                                 <div class="rate">Рейтинг:{{ author.rating }}</div>
+                              {% endif %}
+                           </div>
+                        </div>
+                     </div>
+                     <div class="user__tabs">
+                        {% block tabs %}
+                        {% endblock tabs %}
+                     </div>
+                  </section>
+
+                  <div class="profile__body block">
+                     <div class="profile-placeholder">
+                        {% block content %}
+                        {% endblock %}
+                     </div>
+                  </div>
+               </div>
+               <div class="page__sidebar">
+                  <div class="sidebar__block">
+                     <div class="block-first block">
+                        <div class="block__header">
+                           <div class="block__header-container">
+                              <div class="block__title">Информация о профиле</div>
+                           </div>
+                        </div>
+                        <div class="block__body">
+                           Зарегистрирован - {{ common.user.date_joined }}
+                           <a style="color: #8aa2ce" href="">Редактировать</a>
+                        </div>
+                     </div>
+                     <div class="sidebar__block">
+                        <div class="block-second block">
+                           <div class="block__header">
+                              <div class="block__header-container">
+                                 <div class="block__title">Лучшие статьи</div>
+                              </div>
+                           </div>
+                           <div class="block__body">
+                              {% for post in popular_posts %}
+                                 <div class="rate">
+                                    <a style="color: #8aa2ce" href="{% url 'post' post.id %}">{{ post.heading }}</a>
+                                    {{ post.rating }}
+                                 </div>
+                              {% endfor %}
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </main>
+      <footer class="footer bg-dark">
+         <div class="container">
+            <p class="footer-info">Copyright &copy; Your Website 2021</p>
+         </div>
+      </footer>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+      <script src="js/script.js"></script>
+   </div>
+</body>
+</html>

@@ -93,6 +93,9 @@ class PostDetailView(DetailView, CreateView):
         form.instance.post = self.get_object()
         return super(PostDetailView, self).form_valid(form)
 
+    def like(self):
+        self.object.like()
+        self.save()
 
 @method_decorator(login_required, name='dispatch')
 class PostSearchView(ListView):
@@ -119,3 +122,51 @@ class CategoryPostView(DetailView):
         context['all_posts'] = Post.objects.filter(category=self.object)
         return context
 
+
+class ProfileView(DetailView):
+
+    model = Common
+    template_name = 'profile/profile_post.html'
+    context_object_name = 'common'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if Author.objects.filter(user=self.object.user).exists():
+            author = Author.objects.get(user=self.object.user)
+            context['author'] = author
+            context['no_post'] = not Post.objects.filter(author=author).exists()
+
+            if Post.objects.filter(author=author).exists():
+                context['author_posts'] = Post.objects.filter(author=author).order_by('-data_time')
+
+        context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
+        context['is_author'] = self.request.user.groups.filter(name='authors').exists()
+        context['popular_posts'] = Post.objects.order_by('-rating')
+        return context
+
+class CommonCommentsView(DetailView):
+
+    model = Common
+    template_name = 'profile/common_comments.html'
+    context_object_name = 'common'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if Author.objects.filter(user=self.object.user).exists():
+            author = Author.objects.get(user=self.object.user)
+            context['author'] = author
+            context['no_post'] = not Post.objects.filter(author=author).exists()
+
+            if Post.objects.filter(author=author).exists():
+                context['author_posts'] = Post.objects.filter(author=author).order_by('-data_time')
+
+        if Comment.objects.filter(common=self.object).exists():
+            context['common_comments'] = Comment.objects.filter(common=self.object)
+
+        context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
+        context['is_author'] = self.request.user.groups.filter(name='authors').exists()
+        context['no_comments'] = not Comment.objects.filter(common=self.object).exists()
+        context['popular_posts'] = Post.objects.order_by('-rating')
+        return context

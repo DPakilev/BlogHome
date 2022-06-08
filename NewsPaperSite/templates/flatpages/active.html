@@ -10,7 +10,8 @@
         <meta name="author" content="" />
         {% block title %}{% endblock title %}
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="{% static 'home/assets/favicon.ico' %" />
+        <link type="image/x-icon" href="{% static 'profile/img/favicon/favicon1.png' %}" rel="shortcut icon">
+        <link type="Image/x-icon" href="{% static 'profile/img/favicon/favicon1.png' %}" rel="icon">
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'home/css/styles.css' %}" rel="stylesheet" />
     </head>
@@ -19,21 +20,16 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" href="{% url 'all_post' %}">Home</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <li class="nav-item"><a class="nav-link" href="{% url 'post_create' %}">Создать товар</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'post_search' %}">Поиск статей и новостей</a></li>
-                {% if is_not_authors %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'upgrade' %}">Хочу быть Автором!</a></li>
-                {% else %}
-                {% endif %}
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 
 
                         {% if user.is_authenticated %}
-                            <li class="nav-item"><a class="nav-link" href="">{{ user.first_name }} {{ user.last_name }}</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Выйти</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'profile' user.username %}">{{ user.username }}</a></li>
                             {% block head %}
                             {% endblock head %}
 

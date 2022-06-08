@@ -1,0 +1,60 @@
+{% extends 'flatpages/profile.html' %}
+
+{% block title %}
+   <title>Ваши коментарии - BlogHome</title>
+{% endblock title %}
+
+{% block tabs %}
+   <div class="tabs">
+      <div class="tabs__tab-item">
+         <a href="{% url 'profile' common.user.username %}" class="tabs__tab-link tabs__tab-link1">Ваши публикации</a>
+      </div>
+      <div class="tabs__tab-item">
+         <a href="" class="tabs__tab-link tabs__tab-link2">Понравившиеся</a>
+      </div>
+      <div class="tabs__tab-item">
+         <a style="color: #8aa2ce" href="{% url 'profile_comment_post' common.user.username %}" class="tabs__tab-link tabs__tab-link3">Комментарии</a>
+      </div>
+   </div>
+{% endblock tabs %}
+
+{% block content %}
+   {% if no_comments %}
+
+      <div class="profile-placeholder__image"></div>
+      <div class="profile-placeholder__text">
+         <p>К сожалению, Вы не оставляли комментарии</p>
+      </div>
+
+   {% else %}
+
+      {% for comment in common_comments %}
+      <div class="card mb-4">
+         <div class="card-body">
+            <div class="text-muted fst-italic mb-2">Posted on {{ comment.data_time }}</div>
+            <p class="fs-5 mb-4">{{ comment.text }}</p>
+            <p class="fs-5 mb-4">К посту - {{ comment.post.heading }}</p>
+            <br>
+         </div>
+      </div>
+      {% endfor %}
+
+   {% endif %}
+
+<style type="text/css">
+   .tabs__tab-link3::before {
+      content: "";
+      text-align: center;
+      background-color: #8aa2ce;
+      height: 2px;
+      left: 0;
+      right: 0;
+      top: 47px;
+      width: 100%;
+      position: absolute;
+      margin: 0 auto;
+   }
+</style>
+{% endblock content %}
+
+

@@ -9,7 +9,8 @@
         <meta name="author" content="" />
         <title>Blog Post - Start Bootstrap Template</title>
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="{% static 'post/assets/favicon.ico' %}" />
+        <link type="image/x-icon" href="{% static 'profile/img/favicon/favicon1.png' %}" rel="shortcut icon">
+        <link type="Image/x-icon" href="{% static 'profile/img/favicon/favicon1.png' %}" rel="icon">
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'post/css/styles.css' %}" rel="stylesheet" />
     </head>
@@ -24,7 +25,7 @@
 
 
                         {% if user.is_authenticated %}
-                            <li class="nav-item"><a class="nav-link" href="{% url 'account_logout' %}">Выйти</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'profile' user.username %}">{{ user.username }}</a></li>
                             {% block head %}
                             {% endblock head %}
 
@@ -59,6 +60,7 @@
                         </header>
                         <section class="mb-5">
                             <p class="fs-5 mb-4">{{ post.text }}</p>
+                            {{ post.like }}
                         </section>
                     </article>
                     <!-- Comments section-->

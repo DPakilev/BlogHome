@@ -14,8 +14,10 @@ urlpatterns = [
         path('upgrade/', upgrade_me, name='upgrade'),
         path('<int:pk>/category', CategoryPostView.as_view(), name='category_post')
     ])),
-    # path('profile/<slug:username>', include([
-    #     path('', ProfileView.as_view(), name='profile'),
-    #     path('edit', ProfileEditView.as_view(), name='profile_edit')
-    # ]))
+    path('profile/<str:slug>/', include([
+        path('', ProfileView.as_view(), name='profile'),
+        path('comment/', CommonCommentsView.as_view(),name='profile_comment_post'),
+        # path('favorite', ProfileFavoritePost.as_view(), name='profile_favorite_post'),
+        # path('edit', ProfileEditView.as_view(), name='profile_edit')
+    ]))
 ]
