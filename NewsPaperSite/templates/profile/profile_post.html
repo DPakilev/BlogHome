@@ -10,7 +10,7 @@
          <a style="color: #8aa2ce" href="{% url 'profile' common.user.username %}" class="tabs__tab-link tabs__tab-link1">Ваши публикации</a>
       </div>
       <div class="tabs__tab-item">
-         <a href="" class="tabs__tab-link tabs__tab-link2">Понравившиеся</a>
+         <a href="{% url 'profile_favorite_post' common.user.username %}" class="tabs__tab-link tabs__tab-link2">Понравившиеся</a>
       </div>
       <div class="tabs__tab-item">
          <a href="{% url 'profile_comment_post' common.user.username %}" class="tabs__tab-link tabs__tab-link3">Комментарии</a>

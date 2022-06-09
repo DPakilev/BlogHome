@@ -171,13 +171,6 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 
 FORKED_BY_MULTIPROCESSING = 1
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'cache_files'),
-    }
-}
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

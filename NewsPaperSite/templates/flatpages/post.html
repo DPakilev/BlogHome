@@ -60,7 +60,19 @@
                         </header>
                         <section class="mb-5">
                             <p class="fs-5 mb-4">{{ post.text }}</p>
-                            {{ post.like }}
+                            {% if user.is_authenticated %}
+                                {% if not_in_favorite %}
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <button class="btn btn-primary" name="add_favorite" value="add_favorite">Добавить в избранное</button>
+                                    </form>
+                                {% else %}
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <button class="btn btn-primary" name="delete_favorite" value="delete_favorite">Убрать из избранного</button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
                         </section>
                     </article>
                     <!-- Comments section-->
@@ -68,10 +80,10 @@
                         <div class="card bg-light">
                             <div class="card-body">
                                 {% if user.is_authenticated %}
-                                    <form method="post">
+                                    <form method="post" autocomplete="off">
                                         {% csrf_token %}
-                                        {{ form.text }}<br>
-                                        <input align="left" class="btn btn-primary" type="submit" value="Оставить комментарий">
+                                        {{ form }}
+                                        <input align="left" class="btn btn-primary" type="submit" value="Оставить комментарий" name="add_comment">
                                     </form>
                                 {% endif %}
                                 {% for comment in all_comment_post %}
@@ -80,7 +92,6 @@
                                             <div class="fw-bold">{{ comment.common.user.first_name }} {{ comment.common.user.last_name }}</div>
                                             <div class="text-muted fst-italic mb-<p>2">{{ comment.data_time }}</div>
                                                 {{ comment.text }}
-                                            <div class="text-muted fst-italic mb-<p>2">Рейтинг - {{ comment.rating }}</div>
                                         </div>
                                     </div>
                                     <hr>
@@ -91,10 +102,7 @@
                 </div>
                 <!-- Side widgets-->
                 <div class="col-lg-4">
-                    <!-- Search widget-->
                     <div class="card mb-4">
-                        <div class="card-header">Рейтинг статьи: {{ post.rating }}</div>
-                        
                     </div>
                     <!-- Categories widget-->
                     <div class="card mb-4">
@@ -140,3 +148,5 @@
         <script src="{% static 'post/js/scripts.js' %}"></script>
     </body>
 </html>
+
+
