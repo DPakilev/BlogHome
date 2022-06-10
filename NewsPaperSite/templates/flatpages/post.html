@@ -60,8 +60,7 @@
                         </header>
                         <section class="mb-5">
                             <p class="fs-5 mb-4">{{ post.text }}</p>
-                            {% if user.is_authenticated %}
-                                {% if not_in_favorite %}
+                                {% if not_in_favorite and user.is_authenticated %}
                                     <form method="post">
                                         {% csrf_token %}
                                         <button class="btn btn-primary" name="add_favorite" value="add_favorite">Добавить в избранное</button>
@@ -72,7 +71,6 @@
                                         <button class="btn btn-primary" name="delete_favorite" value="delete_favorite">Убрать из избранного</button>
                                     </form>
                                 {% endif %}
-                            {% endif %}
                         </section>
                     </article>
                     <!-- Comments section-->

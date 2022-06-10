@@ -36,7 +36,7 @@ class CommentForm(ModelForm):
              'text': Textarea(attrs={
                  'class': 'form-control',
                  'placeholder': 'Здесь можно оставить собственный комментарий',
-                 'id': 'id_text_comment'
+                 'value': ''
 
              })
          }

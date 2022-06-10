@@ -18,6 +18,5 @@ urlpatterns = [
         path('', ProfileView.as_view(), name='profile'),
         path('comment/', CommonCommentsView.as_view(),name='profile_comment_post'),
         path('favorite', ProfileFavoritePostView.as_view(), name='profile_favorite_post'),
-        # path('edit', ProfileEditView.as_view(), name='profile_edit')
     ]))
 ]

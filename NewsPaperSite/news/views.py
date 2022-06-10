@@ -1,5 +1,7 @@
 from django.http import HttpResponse
-from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView, View
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
+from django.views.generic.edit import FormMixin
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -73,12 +75,15 @@ class PostUpdateView(PermissionRequiredMixin, UpdateView):
         return Post.objects.get(pk=id)
 
 
-class PostDetailView(DetailView, CreateView):
+class PostDetailView(FormMixin, DetailView):
 
     model = Post
     template_name = 'flatpages/post.html'
     context_object_name = 'post'
     form_class = CommentForm
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('post', kwargs={'pk':self.get_object().id})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -90,17 +95,16 @@ class PostDetailView(DetailView, CreateView):
         return context
 
     def form_valid(self, form, *args, **kwargs):
-        user = self.request.user
-        common = Common.objects.get(user=user)
-        form.instance.common = common
-        form.instance.post = self.get_object()
-        return super(PostDetailView, self).form_valid(form)
+        self.object = form.save(commit=False)
+        self.object.post = self.get_object()
+        self.object.common = Common.objects.get(user=self.request.user)
+        self.object.save()
+        return super().form_valid(form)
 
     def post(self, request, *args, **kwargs):
 
         self.object = self.get_object()
         context = self.get_context_data()
-        common = Common.objects.get(user=self.request.user)
 
         if request.POST.get("add_favorite") and "add_favorite":
             common = Common.objects.get(user=self.request.user)
@@ -111,12 +115,11 @@ class PostDetailView(DetailView, CreateView):
             FavoritesPost.objects.get(common=common, post=self.object).delete()
 
         elif request.POST.get("add_comment"):
-            form = CommentForm(self.request.POST)
-            form.instance.common = common
-            form.instance.post = self.get_object()
-            return super(PostDetailView, self).form_valid(form)
+            form = self.get_form()
+            if form.is_valid():
+                return self.form_valid(form)
 
-        return render(request, "flatpages/post.html", context=context)
+        return redirect(self.get_success_url())
 
 @method_decorator(login_required, name='dispatch')
 class PostSearchView(ListView):
@@ -201,6 +204,8 @@ class ProfileFavoritePostView(DetailView):
             author = Author.objects.get(user=self.object.user)
             context['author'] = author
 
+        context['favorite_posts'] = FavoritesPost.objects.filter(common=self.object)
+        context['no_favorite_posts'] = not FavoritesPost.objects.filter(common=self.object).exists()
         context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
         context['is_author'] = self.request.user.groups.filter(name='authors').exists()
         context['no_comments'] = not Comment.objects.filter(common=self.object).exists()
