@@ -7,7 +7,7 @@
 {% block tabs %}
    <div class="tabs">
       <div class="tabs__tab-item">
-         <a style="color: #8aa2ce" href="{% url 'profile' common.user.username %}" class="tabs__tab-link tabs__tab-link1">Ваши публикации</a>
+         <a style="color: #8aa2ce" href="{% url 'profile' common.user.username %}" class="tabs__tab-link tabs__tab-link1">Публикации</a>
       </div>
       <div class="tabs__tab-item">
          <a href="{% url 'profile_favorite_post' common.user.username %}" class="tabs__tab-link tabs__tab-link2">Понравившиеся</a>
@@ -19,51 +19,80 @@
 {% endblock tabs %}
 
 {% block content %}
-   {% if no_post %}
 
-      <div class="profile-placeholder__image"></div>
-      <div class="profile-placeholder__text">
-         <p>К сожалению, Вы не сделали ещё ни одной публикации</p>
-         {% if is_author %}
-         <a style="color: #8aa2ce" href="{% url 'post_create' %}">Написать статью</a>
-         {% endif %}
-      </div>
+   {% if user_author %}
+      {% if no_post %}
+         <div class="profile__body block">
+            <div class="profile-placeholder">
+               <div class="profile-placeholder__image"></div>
+               <div class="profile-placeholder__text">
+                  <p>К сожалению, Вы не сделали ещё ни одной публикации</p>
+                  <a style="color: #8aa2ce" href="{% url 'post_create' %}">Написать статью</a>
+               </div>
+            </div>
+         </div>
 
+      {% else %}
+
+         {% for post in author_posts %}
+               <div class="card mb-4">
+                    <div class="card-body">
+
+                        <div class="mb-2">
+                            <a class="badge bg-secondary text-decoration-none link-light" href='{% url "profile" post.author.user.username %}'>
+                                    {{ post.author.user.first_name }} {{ post.author.user.last_name }}
+                            </a>
+                            <span class="text-muted fst-italic ">
+                                {{ post.data_time | date:'d.M.Y' }}
+                            </span>
+                        </div>
+                        <h1 class="fw-bolder mb-2 fs-1 ">{{ post.heading }}</h1>
+                        {% for category in post.category.all %}
+                            <a class="mb-2 menu-item" href='{% url "category_post"  category.id %}'>{{ category }}</a>
+                        {% endfor %}
+                        <p class="fs-5 mb-4">{{ post.text | truncatewords:40 }}</p>
+                        <div class="post__item">
+                            <span class="post__btn">
+                                <a class="btn btn-primary" href="{% url 'post' post.id %}">Читать далее →</a>
+                                {% if this_is_common %}
+                                    <a class="btn btn-primary" href="{% url 'post_delete' post.id %}">Удалить</a>
+                                    <a class="btn btn-primary" href="{% url 'post_update' post.id %}">Редактировать</a>
+                                {% endif %}
+                            </span>
+                            <span class="post__rating">
+                                <i class="fa-solid fa-bookmark"></i> {{ post.in_favorite }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+         {% endfor %}
+
+      {% endif %}
    {% else %}
-
-      {% for post in author_posts %}
-      <div class="card mb-4">
-         <div class="card-body">
-            <div class="text-muted fst-italic mb-2">Posted on {{ post.data_time }}</div>
-            <h1 class="fw-bolder mb-1">{{ post.heading }}</h1>
-            {% for category in post.category.all %}
-            <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{ category }}</a>
-            {% endfor %}
-            <p class="fs-5 mb-4">{{ post.text | truncatewords:100 }}</p>
-            <a class="btn btn-primary" href="{% url 'post' post.id %}">Читать далее →</a>
-            <a class="btn btn-primary" href="{% url 'post_delete' post.id %}" >Удалить</a>
-            <a class="btn btn-primary" href="{% url 'post_update' post.id %}">Редактировать</a>
-            <br><br>
+      <div class="profile__body block">
+         <div class="profile-placeholder">
+            <div class="profile-placeholder__image"></div>
+            <div class="profile-placeholder__text">
+               <p>К сожалению, у Вас нет публикаций</p>
+            </div>
          </div>
       </div>
-      {% endfor %}
-
    {% endif %}
 
-<style type="text/css">
-   .tabs__tab-link1::before {
-      content: "";
-      text-align: center;
-      background-color: #8aa2ce;
-      height: 2px;
-      left: 0;
-      right: 0;
-      top: 47px;
-      width: 100%;
-      position: absolute;
-      margin: 0 auto;
-   }
-</style>
+   <style type="text/css">
+      .tabs__tab-link1::before {
+         content: "";
+         text-align: center;
+         background-color: #8aa2ce;
+         height: 2px;
+         left: 0;
+         right: 0;
+         top: 47px;
+         width: 100%;
+         position: absolute;
+         margin: 0 auto;
+      }
+   </style>
 
 {% endblock content %}
 

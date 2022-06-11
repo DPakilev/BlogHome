@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, Textarea
+from django.forms import ModelForm, TextInput, Textarea, CheckboxSelectMultiple
 from allauth.account.forms import SignupForm
 from django.contrib.auth.models import Group
 
@@ -15,13 +15,18 @@ class PostForm(ModelForm):
 
         widgets ={
             'heading': TextInput(attrs={
-                'class': 'from-control',
+                'class': 'form-control',
                 'placeholder': 'Заголовок',
+                'style': 'width:100%',
+                'margin-top': '10px',
             }),
             'text': Textarea(attrs={
                 'class': 'from-control',
                 'placeholder': 'Текст',
+                'style': 'width:100%',
+                'margin-top': '10px',
             }),
+            'category': CheckboxSelectMultiple()
         }
 
 
@@ -36,8 +41,8 @@ class CommentForm(ModelForm):
              'text': Textarea(attrs={
                  'class': 'form-control',
                  'placeholder': 'Здесь можно оставить собственный комментарий',
-                 'value': ''
-
+                 'style': 'width:100%',
+                 'margin-top': '10px',
              })
          }
 

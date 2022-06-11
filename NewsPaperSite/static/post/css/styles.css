@@ -3021,17 +3021,20 @@ textarea.form-control-lg {
   pointer-events: none;
   opacity: 0.65;
 }
+
 .btn-primary {
-  color: #fff;
-  background-color: #232323;
+  color: #232323;
+  background-color: #fff;
   border-color: #505050;
   margin-bottom: 1%;
 }
+
 .btn-primary:hover {
   color: #fff;
-  background-color: #505050;
-  border-color: #969696;
+  background-color: #000;
+  border-color: #fff;
 }
+
 .btn-check:focus + .btn-primary, .btn-primary:focus {
   color: #fff;
   background-color: #0b5ed7;

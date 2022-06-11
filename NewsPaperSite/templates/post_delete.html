@@ -1,28 +1,31 @@
 {% extends 'flatpages/default.html' %}
 
 {% block title %}
-    Удаление старинцы
+    <title>Удаление {{ post.heading }} - BlogHome</title>
 {% endblock title %}
 
 {% block content %}
-    <article>
-        <header class="mb-4">
-            <h1 class="fw-bolder mb-1">{{ post.heading }}</h1>
-            <div class="text-muted fst-italic mb-<p>2">
-            	<p>Posted on {{ post.data_time }}</p>
-            	<p>Author - {{ post.author }}</p>
-            </div>
-            {% for category in post.category.all %}
-                <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{ category }}</a>
-            {% endfor %}
-        </header>
-        <section class="mb-5">
-            <p class="fs-5 mb-4">{{ post.text }}</p>
-        </section>
-    </article>
+                <div class="card mb-4">
+                    <div class="card-body">
+
+                        <div class="mb-2">
+                            <a class="badge bg-secondary text-decoration-none link-light" href='{% url "profile" post.author.user.username %}'>
+                                    {{ post.author.user.first_name }} {{ post.author.user.last_name }}
+                            </a>
+                            <span class="text-muted fst-italic ">
+                                {{ post.data_time | date:'d.M.Y' }}
+                            </span>
+                        </div>
+                        <h1 class="fw-bolder mb-2 fs-1 ">{{ post.heading }}</h1>
+                        {% for category in post.category.all %}
+                            <a class="mb-2 menu-item" href='{% url "category_post"  category.id %}'>{{ category }}</a>
+                        {% endfor %}
+                        <p class="fs-5 mb-4">{{ post.text }}</p>
+                    </div>
+                </div>
 
     <form method="post">
         {% csrf_token %}
-        <input type="submit" value="Подтвердить">
+        <input class="btn btn-primary" type="submit" value="Удалить">
     </form>
 {% endblock content %}

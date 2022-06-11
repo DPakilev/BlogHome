@@ -1,11 +1,22 @@
 {% extends 'flatpages/default.html' %}
 
-{% block title %}Редактирование новости или статьи{% endblock title %}
+{% block title %}
+    <title>Редактирование {{ post.heading }} - BlogHome</title>
+{% endblock title %}
 
 {% block content %}
-    <form method="POST">
-        {% csrf_token %}
-        {{ form }}
-        <input type="submit" value="Подтвердить">
-    </form>
+<section class="mb-5">
+    <div class="card bg-light">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                    {{ form.category }}<br><br>
+                    {{ form.heading }}<br><br>
+                    {{ form.text }}<br>
+
+                <input align="left" class="btn btn-primary mb-4 " type="submit" value="Добавить">
+            </form>
+        </div>
+    </div>
+</section>
 {% endblock content %}

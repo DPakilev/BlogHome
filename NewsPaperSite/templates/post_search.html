@@ -1,7 +1,7 @@
 {% extends 'flatpages/default.html' %}
 
 {% block title %}
-    Поиск новостей и статей
+    <title>Поиск статей - BlogHome</title>
 {% endblock title %}
 
 {% block content %}
@@ -16,21 +16,32 @@
 
         {% for post in filter.qs %}
 
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="text-muted fst-italic mb-2">Posted on {{ post.data_time }}</div>
-                    <div class="small text-muted">Автор - {{ post.author.user.first_name }} {{ post.author.user.last_name }}</div>
-                    <h1 class="fw-bolder mb-1">{{ post.heading }}</h1>
-                    {% for category in post.category.all %}
-                        <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{ category }}</a>
-                    {% endfor %}
-                    <p class="fs-5 mb-4">{{ post.text }}</p>
-                    <a class="btn btn-primary" href="{% url 'post' post.id %}">Читать далее →</a>
-                    <a class="btn btn-primary" href="{% url 'post_delete' post.id %}" >Удалить</a>
-                    <a class="btn btn-primary" href="{% url 'post_update' post.id %}">Редактировать</a>
-                    <br>
+                <div class="card mb-4">
+                    <div class="card-body">
+
+                        <div class="mb-2">
+                            <a class="badge bg-secondary text-decoration-none link-light" href='{% url "profile" post.author.user.username %}'>
+                                    {{ post.author.user.first_name }} {{ post.author.user.last_name }}
+                            </a>
+                            <span class="text-muted fst-italic ">
+                                {{ post.data_time | date:'d.M.Y' }}
+                            </span>
+                        </div>
+                        <h1 class="fw-bolder mb-2 fs-1 ">{{ post.heading }}</h1>
+                        {% for category in post.category.all %}
+                            <a class="mb-2 menu-item" href='{% url "category_post"  category.id %}'>{{ category }}</a>
+                        {% endfor %}
+                        <p class="fs-5 mb-4">{{ post.text | truncatewords:40 }}</p>
+                        <div class="post__item">
+                            <span class="post__btn">
+                                <a class="btn btn-primary post_name" href="{% url 'post' post.id %}">Читать далее →</a>
+                            </span>
+                            <span class="post__rating">
+                                <i class="fa-solid fa-bookmark"></i> {{ post.in_favorite }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
         {% endfor %}
 

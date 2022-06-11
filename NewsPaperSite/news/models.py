@@ -40,6 +40,7 @@ class Post(models.Model):
     category = models.ManyToManyField(Category, through='PostCategory')
     heading = models.CharField(max_length=50)
     text = models.CharField(max_length=20000)
+    in_favorite = models.IntegerField(default=0)
 
     def get_absolute_url(self):
         return f'/news/{self.id}'
@@ -69,7 +70,7 @@ class PostCategory(models.Model):
 class Comment(models.Model):
 
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    text = models.CharField(max_length=512)
+    text = models.CharField(max_length=1024)
     data_time = models.DateTimeField(auto_now_add=True)
     common = models.ForeignKey(Common, on_delete=models.CASCADE)
 

@@ -1,25 +1,45 @@
 {% extends 'flatpages/default.html' %}
+{% load static %}
 
 {% block title %}
-    Все статьи и новости
+    <title>Главная - BlogHome</title>
 {% endblock title %}
 
 {% block content %}
+    <div class="card mb-4">
+        <div class="card-body">
+             <p class="fw-bolder mb-1 fs-1 ">Главная страница</p>
+        </div>
+    </div>
+
     {% if all_post %}
 
         {% for post in all_post %}
 
                 <div class="card mb-4">
                     <div class="card-body">
-                        <div class="text-muted fst-italic mb-2">Posted on {{ post.data_time }}</div>
-                        <div class="small text-muted">Автор - {{ post.author.user.first_name }} {{ post.author.user.last_name }}</div>
-                        <h1 class="fw-bolder mb-1">{{ post.heading }}</h1>
+
+                        <div class="mb-2">
+                            <a class="badge bg-secondary text-decoration-none link-light" href='{% url "profile" post.author.user.username %}'>
+                                    {{ post.author.user.first_name }} {{ post.author.user.last_name }}
+                            </a>
+                            <span class="text-muted fst-italic ">
+                                {{ post.data_time | date:'d.M.Y' }}
+                            </span>
+                        </div>
+                        <h1 class="fw-bolder mb-2 fs-1 ">{{ post.heading }}</h1>
                         {% for category in post.category.all %}
-                            <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{ category }}</a>
+                            <a class="mb-2 menu-item" href='{% url "category_post"  category.id %}'>{{ category }}</a>
                         {% endfor %}
                         <p class="fs-5 mb-4">{{ post.text | truncatewords:40 }}</p>
-                        <a class="btn btn-primary" href="{% url 'post' post.id %}">Читать далее →</a>
-                        <br>
+                        <div class="post__item">
+                            <span class="post__btn">
+                                <a class="btn btn-primary post_name" href="{% url 'post' post.id %}">Читать далее →</a>
+                            </span>
+                            <span class="post__rating">
+                                <i class="fa-solid fa-bookmark"></i> {{ post.in_favorite }}
+                            </span>
+                        </div>
                     </div>
                 </div>
 

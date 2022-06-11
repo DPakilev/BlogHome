@@ -13,26 +13,27 @@
    <link type="image/x-icon" href="{% static 'profile/img/favicon/favicon1.png' %}" rel="shortcut icon">
    <link type="Image/x-icon" href="{% static 'profile/img/favicon/favicon1.png' %}" rel="icon">
    <link href="{% static 'profile/css/style.css' %}" rel="stylesheet" />
+   <script src="https://kit.fontawesome.com/75464cac72.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
    <div class="wrapper">
-      <header class="py-5 bg-light border-bottom mb-4">
+      <header class="py-5 bg-light border-bottom">
          <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                <a class="navbar-brand nav-link" href="/news">BlogHome</a>
                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                   data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                   aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-               {% if is_not_authors %}
-                  <li class="nav-item for-authors"><a class="nav-link" href="{% url 'upgrade' %}">Хочу быть Автором!</a></li>
-               {% else %}
-                  <li class="nav-item for-authors"><a class="nav-link" href="{% url 'post_create' %}">Написать статью</a></li>
-               {% endif %}
+                  {% if is_not_authors %}
+                     <li class="nav-item for-authors"><a class="nav-link" href="{% url 'upgrade' %}">Стать Автором!</a></li>
+                  {% endif %}
 
                <div class="collapse navbar-collapse" id="navbarSupportedContent">
                   <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                     <li class="nav-logout"><a class="nav-link" href="{% url 'account_logout' %}">Выйти</a></li>
+                     {% if this_is_common %}
+                        <li class="nav-logout"><a class="nav-link" href="{% url 'account_logout' %}">Выйти</a></li>
+                     {% endif %}
                   </ul>
                </div>
             </div>
@@ -40,6 +41,23 @@
       </header>
       <div class="header-content">
          <div class="container">
+            <li class="nav-item" ><a class="menu-item" href="{% url 'all_post' %}">Главная</a></li>
+            {% for category in all_categories %}
+               <li class="nav-item" ><a class="menu-item" href="{% url 'category_post' category.id %}">{{ category.name }}</a></li>
+            {% endfor %}
+               <div class="header-box header-item">
+                  {% if is_author %}
+                     <span class="header-btn-item">
+                        <a class="icon-href" href="{% url 'post_create' %}"><i class="fa-solid fa-pen-to-square"></i></a>
+                     </span>
+                  {% endif %}
+                  <span class="header-btn-item">
+                     <a class="icon-href" href="{% url 'post_search' %}"> <i class="fa-solid fa-magnifying-glass"></i></a>
+                  </span>
+                  {% if user.is_authenticated %}
+                     <a class="nav-link" href="{% url 'profile' user.username %}"><img class="user-image" src="{{ user_common.image.url }}"></a>
+                  {% endif %}
+               </div>
          </div>
       </div>
       <main class="page">
@@ -52,13 +70,22 @@
                               <img class="user-card__image" src="{{ common.image.url }}">
                            <div class="user-card__info">
                               <div class="name">
-                                 {{ common.user.first_name }}
+                                 {% if common.user.first_name == '' %}
+                                    Укажите Имя
+                                 {% else %}
+                                    {{ common.user.first_name }}
+                                 {% endif %}
                               </div>
                               <div class="surname">
-                                 {{ common.user.last_name }}
+                                 {% if common.user.last_name == '' %}
+                                    Укажите Фамилию
+                                 {% else %}
+                                    {{ common.user.last_name }}
+                                 {% endif %}
                               </div>
                            </div>
                            <div class="user-card__data">
+                              <div class="username">@{{ common.user.username }}</div>
                            </div>
                         </div>
                      </div>
@@ -67,13 +94,8 @@
                         {% endblock tabs %}
                      </div>
                   </section>
-
-                  <div class="profile__body block">
-                     <div class="profile-placeholder">
-                        {% block content %}
-                        {% endblock %}
-                     </div>
-                  </div>
+                  {% block content %}
+                  {% endblock content %}
                </div>
                <div class="page__sidebar">
                   <div class="sidebar__block">
@@ -85,21 +107,25 @@
                         </div>
                         <div class="block__body">
                            Зарегистрирован - {{ common.user.date_joined }}
-                           <a style="color: #8aa2ce" href="">Редактировать</a>
+                           {% if this_is_common %}
+                              <a style="color: #8aa2ce" href="">Редактировать</a>
+                           {% endif %}
                         </div>
                      </div>
                      <div class="sidebar__block">
                         <div class="block-second block">
                            <div class="block__header">
                               <div class="block__header-container">
-                                 <div class="block__title">Лучшие статьи</div>
+                                 <div class="block__title">Популярные статьи</div>
                               </div>
                            </div>
                            <div class="block__body">
                               {% for post in popular_posts %}
                                  <div class="rate">
-                                    <a style="color: #8aa2ce" href="{% url 'post' post.id %}">{{ post.heading }}</a>
-                                    {{ post.rating }}
+                                    <a class="rate__item" href="{% url 'post' post.id %}">
+                                       <span class="rate__post">{{ post.heading }}</span>
+                                       <span class="rate__rating"><i class="fa-solid fa-bookmark"></i> {{ post.in_favorite }}</span>
+                                    </a>
                                  </div>
                               {% endfor %}
                            </div>

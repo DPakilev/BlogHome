@@ -1,18 +1,22 @@
-{% extends 'flatpages/active.html' %}
+{% extends 'flatpages/default.html' %}
 
 {% block title %}
-    <title>Создание статьи</title>
+    <title>Создание статьи - BlogHome</title>
 {% endblock title %}
 
 {% block content %}
-    <form method="POST">
-        {% csrf_token %}
+<section class="mb-5">
+    <div class="card bg-light">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                    {{ form.category }}<br><br>
+                    {{ form.heading }}<br><br>
+                    {{ form.text }}<br>
 
-        {{ form.article_or_news }}<br><br>
-        {{ form.category }}<br><br>
-        {{ form.heading }}<br><br>
-        {{ form.text }}<br>
-
-        <input type="submit" value="Добавить">
-    </form>
+                <input align="left" class="btn btn-primary mb-4 " type="submit" value="Добавить">
+            </form>
+        </div>
+    </div>
+</section>
 {% endblock content %}

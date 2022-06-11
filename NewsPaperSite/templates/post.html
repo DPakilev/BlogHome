@@ -1,0 +1,71 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+    <title>{{ post.heading }} - BlogHome</title>
+{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-body">
+        <header class="mb-4">
+            <div class="mb-2">
+                <a class="badge bg-secondary text-decoration-none link-light" href='{% url "profile" post.author.user.username %}'>
+                    {{ post.author.user.first_name }} {{ post.author.user.last_name }}
+                </a>
+                <span class="text-muted fst-italic ">
+                    {{ post.data_time | date:'d.M.Y' }}
+                </span>
+            </div>
+            <h1 class="fw-bolder mb-2 fs-1 ">{{ post.heading }}</h1>
+            {% for category in post.category.all %}
+                <a class="mb-2 menu-item" href='{% url "category_post"  category.id %}'>{{ category }}</a>
+            {% endfor %}
+        </header>
+        <section class="mb-5">
+            <p class="fs-5 mb-4">{{ post.text }}</p>
+            {% if user.is_authenticated %}
+                {% if not_in_favorite %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-primary" name="add_favorite" value="add_favorite">Добавить в избранное</button>
+                    </form>
+                {% else %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-primary" name="delete_favorite" value="delete_favorite">Удалить из избранного</button>
+                    </form>
+                {% endif %}
+            {% endif %}
+        </section>
+    </div>
+</div>
+<section class="mb-5">
+    <div class="card bg-light">
+        <div class="card-body">
+            {% if user.is_authenticated %}
+            <form method="post" autocomplete="off">
+                {% csrf_token %}
+                {{ form }}
+                <input align="left" class="btn btn-primary mb-4 " type="submit" value="Оставить комментарий" name="add_comment">
+            </form>
+            {% endif %}
+            {% for comment in all_comment_post %}
+            <div class="d-flex mb-4">
+                <div class="ms-3">
+            <div class="mb-2">
+                <a class="badge bg-secondary text-decoration-none link-light" href='{% url "profile" post.author.user.username %}'>
+                    {{ post.author.user.first_name }} {{ post.author.user.last_name }}
+                </a>
+                <span class="text-muted fst-italic ">
+                    {{ post.data_time | date:'d.M.Y' }}
+                </span>
+            </div>
+                    {{ comment.text }}
+                </div>
+            </div>
+            <hr>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

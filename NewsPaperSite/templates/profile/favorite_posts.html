@@ -8,7 +8,7 @@
 {% block tabs %}
    <div class="tabs">
       <div class="tabs__tab-item">
-         <a href="{% url 'profile' common.user.username %}" class="tabs__tab-link tabs__tab-link1">Ваши публикации</a>
+         <a href="{% url 'profile' common.user.username %}" class="tabs__tab-link tabs__tab-link1">Публикации</a>
       </div>
       <div class="tabs__tab-item">
          <a style="color: #8aa2ce" href="{% url 'profile_favorite_post' common.user.username %}" class="tabs__tab-link tabs__tab-link2">Понравившиеся</a>
@@ -22,27 +22,44 @@
 {% block content %}
 
    {% if no_favorite_posts %}
-
-      <div class="profile-placeholder__image"></div>
-      <div class="profile-placeholder__text">
-         <p>К сожалению, вы не добавляли статьи в избранное</p>
+      <div class="profile__body block">
+         <div class="profile-placeholder">
+             <div class="profile-placeholder__image"></div>
+             <div class="profile-placeholder__text">
+                <p>К сожалению, вы не добавляли статьи в избранное</p>
+             </div>
+         </div>
       </div>
 
    {% else %}
 
       {% for favorite_post in favorite_posts %}
-      <div class="card mb-4">
-         <div class="card-body">
-            <div class="text-muted fst-italic mb-2">Posted on {{ favorite_post.post.data_time }}</div>
-            <h1 class="fw-bolder mb-1">{{ favorite_post.post.heading }}</h1>
-            {% for category in favorite_post.post.category.all %}
-            <a class="badge bg-secondary text-decoration-none link-light" href="#!">{{ category }}</a>
-            {% endfor %}
-            <p class="fs-5 mb-4">{{ favorite_post.post.text | truncatewords:100 }}</p>
-            <a class="btn btn-primary" href="{% url 'post' favorite_post.post.id %}">Читать далее →</a>
-            <br><br>
-         </div>
-      </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+
+                        <div class="mb-2">
+                            <a class="badge bg-secondary text-decoration-none link-light" href='{% url "profile" favorite_post.post.author.user.username %}'>
+                               {{ favorite_post.post.author.user.first_name }} {{ favorite_post.post.author.user.last_name }}
+                            </a>
+                            <span class="text-muted fst-italic ">
+                                {{ favorite_post.post.data_time | date:'d.M.Y' }}
+                            </span>
+                        </div>
+                        <h1 class="fw-bolder mb-2 fs-1 ">{{ favorite_post.post.heading }}</h1>
+                        {% for category in favorite_post.post.category.all %}
+                            <a class="mb-2 menu-item" href='{% url "category_post"  category.id %}'>{{ category }}</a>
+                        {% endfor %}
+                        <p class="fs-5 mb-4">{{ favorite_post.post.text | truncatewords:40 }}</p>
+                        <div class="post__item">
+                            <span class="post__btn">
+                                <a class="btn btn-primary post_name" href="{% url 'post' favorite_post.post.id %}">Читать далее →</a>
+                            </span>
+                            <span class="post__rating">
+                                <i class="fa-solid fa-bookmark"></i> {{ favorite_post.post.in_favorite }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
       {% endfor %}
 
    {% endif %}

@@ -20,12 +20,15 @@ class PostListView(ListView):
     template_name = 'home.html'
     context_object_name = 'all_post'
     ordering = ['-data_time']
-    paginate_by = 3
+    paginate_by = 4
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
-        context['all_category'] = Category.objects.all()
+        context['is_author'] = self.request.user.groups.filter(name='authors').exists()
+        context['all_categories'] = Category.objects.all()
+        context['popular_posts'] = Post.objects.order_by('-in_favorite')
+        if self.request.user.is_authenticated:
+            context['common'] = Common.objects.get(user=self.request.user)
         return context
 
 
@@ -47,6 +50,15 @@ class PostCreateView(PermissionRequiredMixin, CreateView):
     success_url = '/account/login/'
     permission_required = ('news.add_post')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_author'] = self.request.user.groups.filter(name='authors').exists()
+        context['all_categories'] = Category.objects.all()
+        context['popular_posts'] = Post.objects.order_by('-in_favorite')
+        if self.request.user.is_authenticated:
+            context['common'] = Common.objects.get(user=self.request.user)
+        return context
+
     def form_valid(self, form):
         user = self.request.user
         author = Author.objects.get(user=user)
@@ -61,6 +73,14 @@ class PostDeleteView(PermissionRequiredMixin, DeleteView):
     success_url = '/account/login/'
     permission_required = ('news.delete_post')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_author'] = self.request.user.groups.filter(name='authors').exists()
+        context['all_categories'] = Category.objects.all()
+        context['popular_posts'] = Post.objects.order_by('-in_favorite')
+        if self.request.user.is_authenticated:
+            context['common'] = Common.objects.get(user=self.request.user)
+        return context
 
 
 class PostUpdateView(PermissionRequiredMixin, UpdateView):
@@ -70,6 +90,16 @@ class PostUpdateView(PermissionRequiredMixin, UpdateView):
     success_url = '/account/login/'
     permission_required = ('news.change_post')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_author'] = self.request.user.groups.filter(name='authors').exists()
+        context['all_categories'] = Category.objects.all()
+        context['popular_posts'] = Post.objects.order_by('-in_favorite')
+        if self.request.user.is_authenticated:
+            context['common'] = Common.objects.get(user=self.request.user)
+        return context
+
+
     def get_object(self,**kwargs):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
@@ -78,7 +108,7 @@ class PostUpdateView(PermissionRequiredMixin, UpdateView):
 class PostDetailView(FormMixin, DetailView):
 
     model = Post
-    template_name = 'flatpages/post.html'
+    template_name = 'post.html'
     context_object_name = 'post'
     form_class = CommentForm
 
@@ -87,11 +117,17 @@ class PostDetailView(FormMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['is_author'] = self.request.user.groups.filter(name='authors').exists()
         context['all_posts'] = Post.objects.filter(author=self.object.author)
         context['all_category'] = Category.objects.all()
         context['all_comment_post'] = Comment.objects.filter(post=self.object)
-        common = Common.objects.get(user=self.request.user)
-        context['not_in_favorite'] = not FavoritesPost.objects.filter(common=common, post=self.object).exists()
+        context['all_categories'] = Category.objects.all()
+        context['popular_posts'] = Post.objects.order_by('-in_favorite')
+
+        if self.request.user.is_authenticated:
+            common = Common.objects.get(user=self.request.user)
+            context['not_in_favorite'] = not FavoritesPost.objects.filter(common=common, post=self.object).exists()
+            context['common'] = common
         return context
 
     def form_valid(self, form, *args, **kwargs):
@@ -104,20 +140,23 @@ class PostDetailView(FormMixin, DetailView):
     def post(self, request, *args, **kwargs):
 
         self.object = self.get_object()
-        context = self.get_context_data()
+        if request.user.is_authenticated:
+            if request.POST.get("add_favorite") and "add_favorite":
+                common = Common.objects.get(user=self.request.user)
+                FavoritesPost.objects.create(common=common, post=self.object)
+                self.object.in_favorite += 1
+                self.object.save()
 
-        if request.POST.get("add_favorite") and "add_favorite":
-            common = Common.objects.get(user=self.request.user)
-            FavoritesPost.objects.create(common=common, post=self.object)
+            elif request.POST.get("delete_favorite") and "delete_favorite":
+                common = Common.objects.get(user=self.request.user)
+                FavoritesPost.objects.get(common=common, post=self.object).delete()
+                self.object.in_favorite -= 1
+                self.object.save()
 
-        elif request.POST.get("delete_favorite") and "delete_favorite":
-            common = Common.objects.get(user=self.request.user)
-            FavoritesPost.objects.get(common=common, post=self.object).delete()
-
-        elif request.POST.get("add_comment"):
-            form = self.get_form()
-            if form.is_valid():
-                return self.form_valid(form)
+            elif request.POST.get("add_comment"):
+                form = self.get_form()
+                if form.is_valid():
+                    return self.form_valid(form)
 
         return redirect(self.get_success_url())
 
@@ -131,7 +170,12 @@ class PostSearchView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['is_author'] = self.request.user.groups.filter(name='authors').exists()
         context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
+        context['all_categories'] = Category.objects.all()
+        context['popular_posts'] = Post.objects.order_by('-in_favorite')
+        if self.request.user.is_authenticated:
+            context['common'] = Common.objects.get(user=self.request.user)
         return context
 
 
@@ -143,7 +187,12 @@ class CategoryPostView(DetailView):
 
     def get_context_data(self,  **kwargs):
         context = super().get_context_data(**kwargs)
+        context['is_author'] = self.request.user.groups.filter(name='authors').exists()
         context['all_posts'] = Post.objects.filter(category=self.object)
+        context['all_categories'] = Category.objects.all()
+        context['popular_posts'] = Post.objects.order_by('-in_favorite')
+        if self.request.user.is_authenticated:
+            context['common'] = Common.objects.get(user=self.request.user)
         return context
 
 
@@ -156,17 +205,30 @@ class ProfileView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        if self.request.user.is_authenticated:
+            context['user_common'] = Common.objects.get(user=self.request.user)
+
         if Author.objects.filter(user=self.object.user).exists():
             author = Author.objects.get(user=self.object.user)
-            context['author'] = author
             context['no_post'] = not Post.objects.filter(author=author).exists()
+            context['user_author'] = author
 
             if Post.objects.filter(author=author).exists():
                 context['author_posts'] = Post.objects.filter(author=author).order_by('-data_time')
 
+        if self.object.user.first_name == '':
+            context['no_first_name'] = True
+
+        if self.object.user.last_name == '':
+            context['no_last_name'] = True
+
+        if self.object.user == self.request.user:
+            context['this_is_common'] = True
+
+        context['all_categories'] = Category.objects.all()
         context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
         context['is_author'] = self.request.user.groups.filter(name='authors').exists()
-        context['popular_posts'] = Post.objects.all()
+        context['popular_posts'] = Post.objects.order_by('-in_favorite')
         return context
 
 class CommonCommentsView(DetailView):
@@ -177,18 +239,26 @@ class CommonCommentsView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        if Author.objects.filter(user=self.object.user).exists():
-            author = Author.objects.get(user=self.object.user)
-            context['author'] = author
+        if self.request.user.is_authenticated:
+            context['user_common'] = Common.objects.get(user=self.request.user)
 
         if Comment.objects.filter(common=self.object).exists():
             context['common_comments'] = Comment.objects.filter(common=self.object)
 
+        if self.object.user.first_name == '':
+            context['no_first_name'] = True
+
+        if self.object.user.last_name == '':
+            context['no_last_name'] = True
+
+        if self.object.user == self.request.user:
+            context['this_is_common'] = True
+
+        context['all_categories'] = Category.objects.all()
         context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
         context['is_author'] = self.request.user.groups.filter(name='authors').exists()
         context['no_comments'] = not Comment.objects.filter(common=self.object).exists()
-        context['popular_posts'] = Post.objects.all()
+        context['popular_posts'] = Post.objects.order_by('-in_favorite')
         return context
 
 class ProfileFavoritePostView(DetailView):
@@ -200,14 +270,27 @@ class ProfileFavoritePostView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        if self.request.user.is_authenticated:
+            context['user_common'] = Common.objects.get(user=self.request.user)
+
         if Author.objects.filter(user=self.object.user).exists():
             author = Author.objects.get(user=self.object.user)
             context['author'] = author
+
+        if self.object.user.first_name == '':
+            context['no_first_name'] = True
+
+        if self.object.user.last_name == '':
+            context['no_last_name'] = True
+
+        if self.object.user == self.request.user:
+            context['this_is_common'] = True
 
         context['favorite_posts'] = FavoritesPost.objects.filter(common=self.object)
         context['no_favorite_posts'] = not FavoritesPost.objects.filter(common=self.object).exists()
         context['is_not_authors'] = not self.request.user.groups.filter(name='authors').exists()
         context['is_author'] = self.request.user.groups.filter(name='authors').exists()
         context['no_comments'] = not Comment.objects.filter(common=self.object).exists()
-        context['popular_posts'] = Post.objects.all()
+        context['popular_posts'] = Post.objects.order_by('-in_favorite')
+        context['all_categories'] = Category.objects.all()
         return context

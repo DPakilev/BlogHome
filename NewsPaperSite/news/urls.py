@@ -12,7 +12,7 @@ urlpatterns = [
         path('search/', PostSearchView.as_view(), name='post_search'),
         path('<int:pk>/update', PostUpdateView.as_view(), name='post_update'),
         path('upgrade/', upgrade_me, name='upgrade'),
-        path('<int:pk>/category', CategoryPostView.as_view(), name='category_post')
+        path('category/<int:pk>/', CategoryPostView.as_view(), name='category_post')
     ])),
     path('profile/<str:slug>/', include([
         path('', ProfileView.as_view(), name='profile'),
