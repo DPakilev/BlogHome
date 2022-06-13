@@ -108,7 +108,7 @@
                         <div class="block__body">
                            Зарегистрирован - {{ common.user.date_joined }}
                            {% if this_is_common %}
-                              <a style="color: #8aa2ce" href="">Редактировать</a>
+                              <a style="color: #8aa2ce" href="{% url 'edit_profile' common.user.username %}">Редактировать</a>
                            {% endif %}
                         </div>
                      </div>

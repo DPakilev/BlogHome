@@ -5,9 +5,9 @@ from django.utils.text import slugify
 
 class Common(models.Model):
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to="users/", default='default.jpg')
-    slug = models.SlugField(null=True,unique=True)
+    slug = models.SlugField(null=True, unique=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.user.username)
@@ -38,7 +38,7 @@ class Post(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     data_time = models.DateTimeField(auto_now_add=True)
     category = models.ManyToManyField(Category, through='PostCategory')
-    heading = models.CharField(max_length=50)
+    heading = models.CharField(max_length=250)
     text = models.CharField(max_length=20000)
     in_favorite = models.IntegerField(default=0)
 

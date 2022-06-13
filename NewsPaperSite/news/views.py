@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.views.generic.edit import FormMixin
@@ -10,8 +10,8 @@ from django.contrib.auth.models import Group
 from requests import request
 
 from .filters import PostFilter
-from .forms import PostForm, CommentForm
-from .models import Post, Author, Category, Comment, Common, FavoritesPost
+from .forms import PostForm, CommentForm, UserEditForm, CommonEditForm
+from .models import Post, Author, Category, Comment, Common, FavoritesPost, User
 
 
 class PostListView(ListView):
@@ -294,3 +294,33 @@ class ProfileFavoritePostView(DetailView):
         context['popular_posts'] = Post.objects.order_by('-in_favorite')
         context['all_categories'] = Category.objects.all()
         return context
+
+
+class EditProfileView(UpdateView):
+
+    template_name = 'profile/profile_edit.html'
+    form_class = UserEditForm
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('profile', kwargs={'slug': self.get_object().username})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_author'] = self.request.user.groups.filter(name='authors').exists()
+        context['all_categories'] = Category.objects.all()
+        context['popular_posts'] = Post.objects.order_by('-in_favorite')
+        if self.request.user.is_authenticated:
+            context['common'] = Common.objects.get(user=self.request.user)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES, instance=self.request.user)
+        image_form = CommonEditForm(data=request.POST, files=request.FILES, instance=request.user.common)
+        if form.is_valid():
+            form.save()
+            image_form.save()
+
+        return redirect(self.get_success_url())
+
+    def get_object(self, queryset=None):
+        return self.request.user

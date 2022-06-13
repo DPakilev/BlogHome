@@ -17,6 +17,7 @@ urlpatterns = [
     path('profile/<str:slug>/', include([
         path('', ProfileView.as_view(), name='profile'),
         path('comment/', CommonCommentsView.as_view(),name='profile_comment_post'),
-        path('favorite', ProfileFavoritePostView.as_view(), name='profile_favorite_post'),
+        path('favorite/', ProfileFavoritePostView.as_view(), name='profile_favorite_post'),
+        path('edit/', EditProfileView.as_view(), name='edit_profile')
     ]))
 ]

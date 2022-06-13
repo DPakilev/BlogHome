@@ -1,0 +1,13 @@
+{% extends 'flatpages/default.html' %}
+
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.first_name }}<br><br>
+    {{ form.last_name }}<br><br>
+    {{ form.email }}<br><br>
+    <input align="left" class="btn btn-primary mb-4 " type="file" value="Закгрузить" name="image">
+    <input align="left" class="btn btn-primary mb-4 " type="submit" value="Сохранить">
+</form>
+{% endblock %}
